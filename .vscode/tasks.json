@@ -4,9 +4,9 @@
     {
       "label": "Build",
       "type": "shell",
-      "command": "go build -o investment-calculator .",
+      "command": "go build -o profit-calculator .",
       "options": {
-        "cwd": "${workspaceFolder}/2-essentials/investment-calculator"
+        "cwd": "${workspaceFolder}/2-essentials/profit-calculator"
       },
       "group": {
         "kind": "build",
