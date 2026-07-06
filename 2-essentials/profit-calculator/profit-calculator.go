@@ -29,12 +29,16 @@ func main() {
 	fmt.Println("What is your tax rate?:")
 	fmt.Scan(&taxRate)
 
-	taxAmount := revenue * (taxRate / 100)
-	profit := revenue - expenses
-	earningsAfterTax := profit - taxAmount
-	ratio := revenue / profit
+	// calculations
 
-	fmt.Println("Your Earnings before Tax: $" + strconv.FormatFloat(profit, 'f', 2, 64))
+	ebt := revenue - expenses
+	//taxAmount := ebt * (taxRate / 100)
+	profit := ebt * (1 - (taxRate / 100))
+	earningsAfterTax := ebt - taxRate
+	ratio := ebt / profit
+
+	// output
+	fmt.Println("Your Earnings before Tax: $" + strconv.FormatFloat(ebt, 'f', 2, 64))
 	fmt.Println("Your Earnings after Tax: $" + strconv.FormatFloat(earningsAfterTax, 'f', 2, 64))
 	fmt.Println("Your ratio of revenue to profit is: %" + strconv.FormatFloat(ratio, 'f', 2, 64))
 }
