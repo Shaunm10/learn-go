@@ -6,7 +6,7 @@
       "type": "shell",
       "command": "go build -o profit-calculator .",
       "options": {
-        "cwd": "${workspaceFolder}/2-essentials/function-refactor"
+        "cwd": "${workspaceFolder}/2-essentials/control-structures"
       },
       "group": {
         "kind": "build",
