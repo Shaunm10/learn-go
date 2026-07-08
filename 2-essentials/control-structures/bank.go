@@ -1,12 +1,22 @@
 package main
 
 import (
+	"errors"
 	"fmt"
 	"os"
 	"strconv"
 )
 
 const DataFileName = "balance.data"
+
+// Color constants
+const BlackColor = "\033[0m"
+const RedColor = "\033[31m"
+const GreenColor = "\033[32m"
+const YellowColor = "\033[33m"
+const BlueColor = "\033[34m"
+const PurpleColor = "\033[35m"
+const CyanColor = "\033[36m"
 
 /*
 	GOALS:
@@ -24,8 +34,12 @@ const DataFileName = "balance.data"
 */
 
 func main() {
-	var accountBalance = readBalanceToFile()
+	var accountBalance, err = readBalanceToFile()
 	var runApplicationLoop = true
+
+	if err != nil {
+		fmt.Println(YellowColor + "Warning: " + err.Error() + BlackColor)
+	}
 
 	// show welcome message
 	fmt.Println("******************")
@@ -110,14 +124,22 @@ func writeBalanceToFile(accountBalance float64) {
 	os.WriteFile(DataFileName, []byte(balanceText), 0644)
 }
 
-func readBalanceToFile() float64 {
+func readBalanceToFile() (float64, error) {
 
-	// TODO: handle error
-	data, _ := os.ReadFile(DataFileName)
+	data, readFileError := os.ReadFile(DataFileName)
+
+	if readFileError != nil {
+
+		errorMessage := fmt.Sprintf("Failed to read file from %s", DataFileName)
+		return 0, errors.New(errorMessage)
+	}
 	balanceText := string(data)
 
-	// TODO: handle error
-	balance, _ := strconv.ParseFloat(balanceText, 64)
-	return balance
+	balance, parseFloatError := strconv.ParseFloat(balanceText, 64)
 
+	if parseFloatError != nil {
+		errorMessage := fmt.Sprintf("Failed to convert value to float '%s'", balanceText)
+		return 0, errors.New(errorMessage)
+	}
+	return balance, nil
 }
