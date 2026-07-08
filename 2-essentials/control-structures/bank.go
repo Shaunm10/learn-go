@@ -1,6 +1,9 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"os"
+)
 
 /*
 	GOALS:
@@ -19,25 +22,36 @@ import "fmt"
 
 func main() {
 	var accountBalance = 0.0
+	var runApplicationLoop = true
 
-	menuChoice := getMainMenuSelection()
+	// show welcome message
+	fmt.Println("******************")
+	fmt.Println("Welcome to Go Bank!")
 
-	switch menuChoice {
-	case 1:
-		showAccountBalance(accountBalance)
-	case 2:
-		handleDeposit(accountBalance)
-	case 3:
-		handleWithdraw(accountBalance)
-	case 4:
-		handleExit()
-	default:
-		fmt.Printf("%v is an invalid selection. Please try again.")
+	for runApplicationLoop {
+
+		menuChoice := getMainMenuSelection()
+
+		switch menuChoice {
+		case 1:
+			showAccountBalance(accountBalance)
+		case 2:
+			handleDeposit(&accountBalance)
+		case 3:
+			handleWithdraw(&accountBalance)
+		case 4:
+			handleExit()
+			runApplicationLoop = false
+		default:
+			fmt.Printf("%v is an invalid selection. Please try again.", menuChoice)
+		}
 	}
+
+	fmt.Println("Shutting down...")
 }
 
 func getMainMenuSelection() (menuChoice int) {
-	fmt.Println("Welcome to Go Bank!")
+	fmt.Println("")
 	fmt.Println("What do you want to do?")
 	fmt.Println("1. Check Balance")
 	fmt.Println("2. Deposit money")
@@ -56,7 +70,7 @@ func handleExit() {
 	fmt.Println("Goodbye!")
 }
 
-func handleDeposit(accountBalance float64) {
+func handleDeposit(accountBalance *float64) {
 	var depositAmount float64
 	fmt.Println("How much would you like to deposit?")
 	fmt.Scan(&depositAmount)
@@ -66,23 +80,32 @@ func handleDeposit(accountBalance float64) {
 		handleDeposit(accountBalance)
 	} else {
 
-		accountBalance += depositAmount
+		*accountBalance += depositAmount
 
-		fmt.Printf("Your account balance is updated to $%.2f\n ", accountBalance)
+		fmt.Printf("Your account balance is updated to $%.2f\n ", *accountBalance)
 		return
 	}
 }
 
-func handleWithdraw(accountBalance float64) {
+func handleWithdraw(accountBalance *float64) {
 	var withdrawAmount float64
 	fmt.Println("How much would you like to withdraw?")
 	fmt.Scan(&withdrawAmount)
-	if withdrawAmount > accountBalance {
-		fmt.Println("You will have overdrawn you account, your current balance is $%.2f\n", accountBalance)
+	if withdrawAmount > *accountBalance {
+		fmt.Printf("You will have overdrawn you account, your current balance is $%.2f\n", *accountBalance)
 		handleWithdraw(accountBalance)
 	} else {
-		accountBalance -= withdrawAmount
-		fmt.Printf("Your account balance is updated to $%.2f\n ", accountBalance)
+		*accountBalance -= withdrawAmount
+		fmt.Printf("Your account balance is updated to $%.2f\n ", *accountBalance)
 		return
 	}
+}
+
+func writeBalanceToFile(accountBalance float64) {
+	balanceText := fmt.Sprint(accountBalance)
+	os.WriteFile("balance.data", []byte(balanceText), 0644)
+}
+
+func readBalanceToFile() (accountBalance float64) {
+	// os.ReadFile("balance.data",)
 }
