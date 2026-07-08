@@ -1,6 +1,10 @@
 package main
 
-import "fmt"
+import (
+	"errors"
+	"fmt"
+	"os"
+)
 
 /*
 Goals
@@ -16,15 +20,37 @@ Goals
 */
 
 func main() {
-	revenue := getUserInput("Revenue: ")
-	expenses := getUserInput("Expenses: ")
-	taxRate := getUserInput("Tax Rate: ")
+	revenue, err := getUserInput("Revenue: ")
+	if err != nil {
+		showCatastrophicError("Revenue", err)
+	}
+	expenses, err := getUserInput("Expenses: ")
 
+	if err != nil {
+		showCatastrophicError("Expenses", err)
+	}
+	taxRate, err := getUserInput("Tax Rate: ")
+
+	if err != nil {
+		showCatastrophicError("Tax Rate", err)
+	}
 	ebt, profit, ratio := calculateFinancials(revenue, expenses, taxRate)
 
 	fmt.Printf("%.1f\n", ebt)
 	fmt.Printf("%.1f\n", profit)
 	fmt.Printf("%.3f\n", ratio)
+
+	saveData(ebt, profit, ratio)
+}
+
+func saveData(ebt, profit, ratio float64) {
+	var dataToPersist = fmt.Sprintf("Ebt: %.2f, Profit: %.2f, ratio: %.2f", ebt, profit, ratio)
+	os.WriteFile("finacialResults.data", []byte(dataToPersist), 0644)
+}
+
+func showCatastrophicError(propertyName string, err error) {
+	fmt.Printf("Error getting %s: %s\n\n", propertyName, err.Error())
+	panic("Unrecoverable error, shutting down.")
 }
 
 func calculateFinancials(revenue, expenses, taxRate float64) (float64, float64, float64) {
@@ -34,9 +60,19 @@ func calculateFinancials(revenue, expenses, taxRate float64) (float64, float64, 
 	return ebt, profit, ratio
 }
 
-func getUserInput(infoText string) float64 {
+func getUserInput(infoText string) (float64, error) {
 	var userInput float64
 	fmt.Print(infoText)
-	fmt.Scan(&userInput)
-	return userInput
+	_, err := fmt.Scan(&userInput)
+
+	if err != nil {
+		errorMessage := fmt.Sprintf("Unacceptable value, `%s` is not convertible to a numeric value.")
+		return 0.0, errors.New(errorMessage)
+	}
+
+	if userInput <= 0 {
+		errorMessage := fmt.Sprintf("Unacceptable value, it must be greater than 0 and you entered '%v'", userInput)
+		return 0.0, errors.New(errorMessage)
+	}
+	return userInput, nil
 }
