@@ -3,7 +3,10 @@ package main
 import (
 	"fmt"
 	"os"
+	"strconv"
 )
+
+const DataFileName = "balance.data"
 
 /*
 	GOALS:
@@ -21,7 +24,7 @@ import (
 */
 
 func main() {
-	var accountBalance = 0.0
+	var accountBalance = readBalanceToFile()
 	var runApplicationLoop = true
 
 	// show welcome message
@@ -40,7 +43,7 @@ func main() {
 		case 3:
 			handleWithdraw(&accountBalance)
 		case 4:
-			handleExit()
+			handleExit(accountBalance)
 			runApplicationLoop = false
 		default:
 			fmt.Printf("%v is an invalid selection. Please try again.", menuChoice)
@@ -66,7 +69,8 @@ func showAccountBalance(accountBalance float64) {
 	fmt.Printf("Your account balance is: $%.2f\n", accountBalance)
 }
 
-func handleExit() {
+func handleExit(accountBalance float64) {
+	writeBalanceToFile(accountBalance)
 	fmt.Println("Goodbye!")
 }
 
@@ -103,9 +107,17 @@ func handleWithdraw(accountBalance *float64) {
 
 func writeBalanceToFile(accountBalance float64) {
 	balanceText := fmt.Sprint(accountBalance)
-	os.WriteFile("balance.data", []byte(balanceText), 0644)
+	os.WriteFile(DataFileName, []byte(balanceText), 0644)
 }
 
-func readBalanceToFile() (accountBalance float64) {
-	// os.ReadFile("balance.data",)
+func readBalanceToFile() float64 {
+
+	// TODO: handle error
+	data, _ := os.ReadFile(DataFileName)
+	balanceText := string(data)
+
+	// TODO: handle error
+	balance, _ := strconv.ParseFloat(balanceText, 64)
+	return balance
+
 }
