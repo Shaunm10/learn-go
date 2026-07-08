@@ -4,9 +4,9 @@
     {
       "label": "Build",
       "type": "shell",
-      "command": "go build -o profit-calculator .",
+      "command": "go build -o bank-app .",
       "options": {
-        "cwd": "${workspaceFolder}/2-essentials/function-refactor"
+        "cwd": "${workspaceFolder}/2-essentials/validate-input-exercise"
       },
       "group": {
         "kind": "build",
