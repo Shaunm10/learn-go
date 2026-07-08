@@ -6,7 +6,7 @@
       "type": "shell",
       "command": "go build -o bank-app .",
       "options": {
-        "cwd": "${workspaceFolder}/2-essentials/validate-input-exercise"
+        "cwd": "${workspaceFolder}/3-packages/split-banking"
       },
       "group": {
         "kind": "build",
