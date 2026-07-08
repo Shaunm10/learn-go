@@ -24,16 +24,17 @@ func main() {
 	if err != nil {
 		showCatastrophicError("Revenue", err)
 	}
-	expenses, err := getUserInput("Expenses: ")
 
+	expenses, err := getUserInput("Expenses: ")
 	if err != nil {
 		showCatastrophicError("Expenses", err)
 	}
-	taxRate, err := getUserInput("Tax Rate: ")
 
+	taxRate, err := getUserInput("Tax Rate: ")
 	if err != nil {
 		showCatastrophicError("Tax Rate", err)
 	}
+
 	ebt, profit, ratio := calculateFinancials(revenue, expenses, taxRate)
 
 	fmt.Printf("%.1f\n", ebt)
@@ -45,7 +46,7 @@ func main() {
 
 func saveData(ebt, profit, ratio float64) {
 	var dataToPersist = fmt.Sprintf("Ebt: %.2f, Profit: %.2f, ratio: %.2f", ebt, profit, ratio)
-	os.WriteFile("finacialResults.data", []byte(dataToPersist), 0644)
+	os.WriteFile("financialResults.data", []byte(dataToPersist), 0644)
 }
 
 func showCatastrophicError(propertyName string, err error) {
