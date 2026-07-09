@@ -6,7 +6,7 @@
       "type": "shell",
       "command": "go build -o bank-app .",
       "options": {
-        "cwd": "${workspaceFolder}/3-packages/split-banking"
+        "cwd": "${workspaceFolder}/5-structs"
       },
       "group": {
         "kind": "build",
