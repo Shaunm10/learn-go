@@ -7,7 +7,7 @@ import (
 type Admin struct {
 	Email    string
 	password string
-	User     user.User
+	user.User
 }
 
 func New(email, password string) Admin {

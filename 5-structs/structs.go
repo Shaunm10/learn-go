@@ -27,6 +27,9 @@ func main() {
 	// So STRANGE
 	fmt.Println(admin.Email)
 
+	// the struct that has the embedded struct contains all the same methods.
+	admin.SpeakMyName()
+
 	//fmt.Println(firstName, user.lastName, birthdate)
 	aUser.SpeakMyName()
 	aUser.ClearMyName()
