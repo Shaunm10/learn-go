@@ -6,7 +6,7 @@
       "type": "go",
       "request": "launch",
       "mode": "auto",
-      "program": "${workspaceFolder}/2-essentials/control-structures",
+      "program": "${workspaceFolder}/5-structs/note-taking-exercise",
       "console": "integratedTerminal"
     }
   ]

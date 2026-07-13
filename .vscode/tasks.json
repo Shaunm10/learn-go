@@ -6,7 +6,7 @@
       "type": "shell",
       "command": "go build -o bank-app .",
       "options": {
-        "cwd": "${workspaceFolder}/5-structs"
+        "cwd": "${workspaceFolder}/5-structs/note-taking-exercise"
       },
       "group": {
         "kind": "build",
