@@ -11,7 +11,7 @@ import (
 type Note struct {
 	Title        string
 	Content      string
-	creationDate time.Time
+	CreationDate time.Time
 }
 
 func New(title, content string) *Note {
@@ -19,13 +19,14 @@ func New(title, content string) *Note {
 	return &Note{
 		Title:        title,
 		Content:      content,
-		creationDate: time.Now(),
+		CreationDate: time.Now(),
 	}
 }
 
 func (note Note) SaveNote() {
+	subDirectory := "savedNotes/"
 	lowerFileName := strings.ToLower(note.Title)
-	fileName := strings.ReplaceAll(lowerFileName, " ", "_") + ".json"
+	fileName := subDirectory + strings.ReplaceAll(lowerFileName, " ", "_") + ".json"
 	bytes, err := json.Marshal(note)
 
 	if err != nil {
