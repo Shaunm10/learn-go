@@ -38,7 +38,12 @@ func promptForNote() (note.Note, error) {
 }
 
 func saveNoteToDisk(note note.Note) {
-	note.SaveNote()
+	err := note.SaveNote()
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Println("saving note successful")
 }
 
 func inputSentence() string {

@@ -9,9 +9,9 @@ import (
 )
 
 type Note struct {
-	Title        string
-	Content      string
-	CreationDate time.Time
+	Title        string    `json:"title"`
+	Content      string    `json:"content"`
+	CreationDate time.Time `json:"creationDate"`
 }
 
 func New(title, content string) *Note {
@@ -23,19 +23,18 @@ func New(title, content string) *Note {
 	}
 }
 
-func (note Note) SaveNote() {
+func (note Note) SaveNote() error {
 	subDirectory := "savedNotes/"
 	lowerFileName := strings.ToLower(note.Title)
 	fileName := subDirectory + strings.ReplaceAll(lowerFileName, " ", "_") + ".json"
 	bytes, err := json.Marshal(note)
 
 	if err != nil {
-		fmt.Println("Unable to save file.")
-		return
+		return err
+
 	}
 
-	os.WriteFile(fileName, bytes, 0644)
-
+	return os.WriteFile(fileName, bytes, 0644)
 }
 
 func (note Note) Display() {
@@ -44,5 +43,7 @@ func (note Note) Display() {
 	fmt.Println("Title: ", note.Title)
 	fmt.Println("Content: ", note.Content)
 	fmt.Println("**********************************")
+
+	//fmt.Printf("Your note title %v has the following content:\n\n", note.Title, note.Content)
 
 }
