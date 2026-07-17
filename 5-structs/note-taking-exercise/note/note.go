@@ -37,3 +37,12 @@ func (note Note) SaveNote() {
 	os.WriteFile(fileName, bytes, 0644)
 
 }
+
+func (note Note) Display() {
+	fmt.Println()
+	fmt.Println("**********************************")
+	fmt.Println("Title: ", note.Title)
+	fmt.Println("Content: ", note.Content)
+	fmt.Println("**********************************")
+
+}

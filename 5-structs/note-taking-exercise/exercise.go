@@ -2,6 +2,7 @@ package main
 
 import (
 	"bufio"
+	"errors"
 	"fmt"
 	"os"
 
@@ -9,11 +10,15 @@ import (
 )
 
 func main() {
-	note := promptForNote()
+	note, error := promptForNote()
+	if error != nil {
+		panic(error)
+	}
+	note.Display()
 	saveNoteToDisk(note)
 }
 
-func promptForNote() note.Note {
+func promptForNote() (note.Note, error) {
 	title := ""
 	content := ""
 	fmt.Print("Note Title:")
@@ -23,9 +28,13 @@ func promptForNote() note.Note {
 	content = inputSentence()
 	//fmt.Scanln(&content)
 
+	if title == "" || content == "" {
+		return note.Note{}, errors.New("title and content are required to create a Note.")
+	}
+
 	note := note.New(title, content)
 
-	return *note
+	return *note, nil
 }
 
 func saveNoteToDisk(note note.Note) {
