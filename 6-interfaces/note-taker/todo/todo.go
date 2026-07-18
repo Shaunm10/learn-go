@@ -22,7 +22,7 @@ func (todo Todo) Display() {
 
 func (todo Todo) Save() error {
 	fileName := strings.ReplaceAll(todo.Text, " ", "_")
-	fileName = "todos/" + strings.ToLower(fileName) + ".json"
+	fileName = "docs/todos/" + strings.ToLower(fileName) + ".json"
 
 	json, err := json.Marshal(todo)
 

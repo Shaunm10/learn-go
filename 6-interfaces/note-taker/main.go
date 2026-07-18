@@ -37,7 +37,11 @@ func main() {
 		fmt.Println("todo saved!")
 	}
 
-	myTodo.Display()
+	err = myTodo.Save()
+	if err != nil {
+
+		myTodo.Display()
+	}
 
 }
 
