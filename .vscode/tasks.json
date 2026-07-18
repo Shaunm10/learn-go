@@ -4,9 +4,9 @@
     {
       "label": "Build",
       "type": "shell",
-      "command": "go build -o bank-app .",
+      "command": "go build -o note-taker .",
       "options": {
-        "cwd": "${workspaceFolder}/5-structs/note-taking-exercise"
+        "cwd": "${workspaceFolder}/6-interfaces/note-taker"
       },
       "group": {
         "kind": "build",
