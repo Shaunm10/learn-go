@@ -22,7 +22,7 @@ func (todo Todo) Display() {
 
 func (todo Todo) Save() error {
 	fileName := strings.ReplaceAll(todo.Text, " ", "_")
-	fileName = strings.ToLower(fileName) + ".json"
+	fileName = "todos/" + strings.ToLower(fileName) + ".json"
 
 	json, err := json.Marshal(todo)
 
@@ -33,7 +33,7 @@ func (todo Todo) Save() error {
 	return os.WriteFile(fileName, json, 0644)
 }
 
-// Convince constructor
+// Convenience constructor
 func New(text string) (Todo, error) {
 	if text == "" {
 		return Todo{}, errors.New("Invalid input.")
