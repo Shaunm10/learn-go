@@ -4,9 +4,9 @@
     {
       "label": "Build",
       "type": "shell",
-      "command": "go build -o note-taker .",
+      "command": "go build -o collections .",
       "options": {
-        "cwd": "${workspaceFolder}/6-interfaces/note-taker"
+        "cwd": "${workspaceFolder}/7-collections"
       },
       "group": {
         "kind": "build",
