@@ -6,7 +6,7 @@
       "type": "shell",
       "command": "go build -o collections .",
       "options": {
-        "cwd": "${workspaceFolder}/7-collections"
+        "cwd": "${workspaceFolder}/7-collections/array-exercise"
       },
       "group": {
         "kind": "build",
