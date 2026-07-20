@@ -34,8 +34,8 @@ func main() {
 
 	// 4) Re-slice the slice from (3) and change it to contain the second
 	//		and last element of the original array.
-	slice1 = hobbies[1:]
-	fmt.Println("slice1:", slice1)
+	slice1 = slice1[1:3] // The GOTCHA is specifying index '3' which will make Go Look at the original array
+	fmt.Println("updated slice1:", slice1)
 
 	// 5) Create a "dynamic array" that contains your course goals (at least 2 goals)
 	courseGoals := []string{"learn go", "build web Api's in go"}
@@ -49,12 +49,12 @@ func main() {
 	//		dynamic list of products (at least 2 products).
 	//		Then add a third product to the existing list of products.
 	productList := []Product{
-		Product{
+		{
 			title: "Fender Stratocaster",
 			price: 999.99,
 			id:    1,
 		},
-		Product{
+		{
 			title: "Nintendo Switch 2",
 			price: 499.99,
 			id:    2,
