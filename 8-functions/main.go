@@ -1,17 +1,15 @@
 package main
 
-import "fmt"
-
 func main() {
-	answer := factorial(5)
-	fmt.Println(answer)
+
 }
 
-func factorial(value int) int {
-	if value == 1 {
-		return value
+// numbers is the "rest of the parameters" much like spread in JavaScript
+func sumUp(numbers ...int) int {
+	sum := 0
+	for _, val := range numbers {
+		sum += val
 	}
 
-	// calling it's self. This func won't return until this inner on does
-	return value * factorial(value-1)
+	return sum
 }
