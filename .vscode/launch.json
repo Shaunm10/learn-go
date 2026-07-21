@@ -6,7 +6,7 @@
       "type": "go",
       "request": "launch",
       "mode": "auto",
-      "program": "${workspaceFolder}/8-functions",
+      "program": "${workspaceFolder}/9-tax calculator",
       "console": "integratedTerminal"
     }
   ]
