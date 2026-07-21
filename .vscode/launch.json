@@ -6,7 +6,7 @@
       "type": "go",
       "request": "launch",
       "mode": "auto",
-      "program": "${workspaceFolder}/7-collections/array-exercise",
+      "program": "${workspaceFolder}/7-collections",
       "console": "integratedTerminal"
     }
   ]

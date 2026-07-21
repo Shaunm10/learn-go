@@ -8,7 +8,7 @@ type Product struct {
 	price float64
 }
 
-func main() {
+func lists() {
 	// creates a fixed sized array of float64 with 4 values.
 	prices := [4]float64{10.99, 9.99, 45.99, 20.0}
 
@@ -20,17 +20,17 @@ func main() {
 	//lastTwoPrices := prices[2:4]
 
 	// gets all the items up to the 3rd one.
-	beginningPrices := prices[:3]
+	//beginningPrices := prices[:3]
 
 	// gets all the items index 2 and beyond
-	lastPrices := prices[2:]
+	//lastPrices := prices[2:]
 
-	numberOfItems := len(lastPrices)
+	//numberOfItems := len(lastPrices)
 
 	// dynamically sized array
 	pricesOfAnySize := []float64{}
 	// or initialized with values
-	pricesOfAnySize2 := []float64{10.99, 79.99}
+	//pricesOfAnySize2 := []float64{10.99, 79.99}
 
 	// this will crash at runtime because this array doesn't yet have this index.
 	pricesOfAnySize[2] = 10.99
