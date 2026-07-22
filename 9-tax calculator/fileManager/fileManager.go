@@ -8,9 +8,14 @@ import (
 	"os"
 )
 
-func ReadLines(filePath string) ([]string, error) {
+type FileManager struct {
+	InputFilePath  string
+	OutputFilePath string
+}
 
-	file, err := os.Open(filePath)
+func (fm FileManager) ReadLines() ([]string, error) {
+
+	file, err := os.Open(fm.InputFilePath)
 
 	if err != nil {
 
@@ -40,13 +45,13 @@ func ReadLines(filePath string) ([]string, error) {
 }
 
 // writes an object to a specific path
-func WriteJSON(data any, filePath string) error {
+func (fm FileManager) WriteJSON(data any) error {
 
-	if filePath == "" {
+	if fm.OutputFilePath == "" {
 		return errors.New("filePath must be specified")
 	}
 
-	file, err := os.Create(filePath)
+	file, err := os.Create(fm.OutputFilePath)
 
 	if err != nil {
 		return errors.Join(errors.New("unable to create a file"), err)
@@ -64,4 +69,12 @@ func WriteJSON(data any, filePath string) error {
 
 	// happy path
 	return nil
+}
+
+func New(inputFilePath, outputFilePath string) FileManager {
+	// validation??
+	return FileManager{
+		InputFilePath:  inputFilePath,
+		OutputFilePath: outputFilePath,
+	}
 }
