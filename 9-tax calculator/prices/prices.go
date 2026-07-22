@@ -13,25 +13,32 @@ type TaxIncludedPriceJob struct {
 	TaxRate     float64
 	InputPrices []float64
 	// The key will be the input price
-	TaxIncludedPrices map[string]float64
+	TaxIncludedPrices map[string]string
 }
 
-func (taxIncludedPriceJob *TaxIncludedPriceJob) Process() {
+func (job *TaxIncludedPriceJob) Process() {
 	result := make(map[string]string)
-	taxIncludedPriceJob.loadData()
+	job.loadData()
 
-	for _, price := range taxIncludedPriceJob.InputPrices {
+	for _, price := range job.InputPrices {
 		// perform calculation
-		taxIncludedPrice := price * (1 + taxIncludedPriceJob.TaxRate)
+		taxIncludedPrice := price * (1 + job.TaxRate)
 
 		// set the value formatted to 2 decimal points
 		result[fmt.Sprintf("%.2f", price)] = fmt.Sprintf("%.2f", taxIncludedPrice)
 	}
-	fmt.Println(result)
-	//taxIncludedPriceJob.TaxIncludedPrices = result
+
+	job.TaxIncludedPrices = result
+	filePathForJob := fmt.Sprintf("./output/result_%.0f.json", job.TaxRate*100)
+	err := fileManager.WriteJSON(job, filePathForJob)
+	if err != nil {
+		fmt.Println(err)
+	} else {
+		fmt.Println("File successfully exported: " + filePathForJob)
+	}
 }
 
-func (taxIncludedPriceJob *TaxIncludedPriceJob) loadData() {
+func (job *TaxIncludedPriceJob) loadData() {
 
 	linesFromFile, err := fileManager.ReadLines(pricesFilePath)
 
@@ -48,7 +55,7 @@ func (taxIncludedPriceJob *TaxIncludedPriceJob) loadData() {
 	}
 
 	// finally populate the input prices
-	taxIncludedPriceJob.InputPrices = append(taxIncludedPriceJob.InputPrices, prices...)
+	job.InputPrices = append(job.InputPrices, prices...)
 }
 
 func NewTaxIncludedPriceJob(taxRate float64) *TaxIncludedPriceJob {
