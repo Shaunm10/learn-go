@@ -4,7 +4,8 @@ import (
 	"bufio"
 	"fmt"
 	"os"
-	"strconv"
+
+	"example.com/price-calculator/conversion"
 )
 
 const pricesFilePath = "prices.txt"
@@ -43,6 +44,9 @@ func (taxIncludedPriceJob *TaxIncludedPriceJob) loadData() {
 
 	scanner := bufio.NewScanner(file)
 
+	// close the file whenever.
+	defer file.Close()
+
 	var linesBuffer []string
 	for scanner.Scan() {
 		linesBuffer = append(linesBuffer, scanner.Text())
@@ -53,28 +57,21 @@ func (taxIncludedPriceJob *TaxIncludedPriceJob) loadData() {
 	if err != nil {
 		// TODO: handle gracefully
 		fmt.Println("Error scanning file", err)
-		file.Close()
+		//file.Close()
 		return
 	}
-	file.Close()
+	//file.Close()
 
-	prices := make([]float64, len(linesBuffer))
-	// iterate thought the strings converting them.
-	for lineIndex, line := range linesBuffer {
-		floatPrice, err := strconv.ParseFloat(line, 64)
-		if err != nil {
-			// if one price conversion failed, stop processing
-			fmt.Printf("Unable to convert value '%v' to a valid Float64 \n\n", line)
-			fmt.Println(err)
-			file.Close()
+	prices, err := conversion.StringsToFloats(linesBuffer)
 
-			return
-		} else {
-
-			prices[lineIndex] = floatPrice
-			//prices = append(prices, floatPrice)
-		}
+	if err != nil {
+		fmt.Println(err)
+		//file.Close()
+		return
 	}
+
+	//file.Close()
+
 	// finally populate the input prices
 	taxIncludedPriceJob.InputPrices = append(taxIncludedPriceJob.InputPrices, prices...)
 }
