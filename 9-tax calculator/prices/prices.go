@@ -1,11 +1,10 @@
 package prices
 
 import (
-	"bufio"
 	"fmt"
-	"os"
 
 	"example.com/price-calculator/conversion"
+	"example.com/price-calculator/fileManager"
 )
 
 const pricesFilePath = "prices.txt"
@@ -34,43 +33,19 @@ func (taxIncludedPriceJob *TaxIncludedPriceJob) Process() {
 
 func (taxIncludedPriceJob *TaxIncludedPriceJob) loadData() {
 
-	file, err := os.Open(pricesFilePath)
+	linesFromFile, err := fileManager.ReadLines(pricesFilePath)
 
 	if err != nil {
-		fmt.Println("Error opening price.txt", err)
-		// TODO: handle gracefully
-		return
-	}
-
-	scanner := bufio.NewScanner(file)
-
-	// close the file whenever.
-	defer file.Close()
-
-	var linesBuffer []string
-	for scanner.Scan() {
-		linesBuffer = append(linesBuffer, scanner.Text())
-	}
-
-	// did the scanner have an error?
-	err = scanner.Err()
-	if err != nil {
-		// TODO: handle gracefully
 		fmt.Println("Error scanning file", err)
-		//file.Close()
 		return
 	}
-	//file.Close()
 
-	prices, err := conversion.StringsToFloats(linesBuffer)
+	prices, err := conversion.StringsToFloats(linesFromFile)
 
 	if err != nil {
 		fmt.Println(err)
-		//file.Close()
 		return
 	}
-
-	//file.Close()
 
 	// finally populate the input prices
 	taxIncludedPriceJob.InputPrices = append(taxIncludedPriceJob.InputPrices, prices...)
