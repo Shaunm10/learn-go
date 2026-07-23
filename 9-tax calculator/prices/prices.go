@@ -8,11 +8,11 @@ import (
 )
 
 type TaxIncludedPriceJob struct {
-	TaxRate     float64
-	InputPrices []float64
+	TaxRate     float64   `json:"tax_rate"`
+	InputPrices []float64 `json:"input_prices"`
 	// The key will be the input price
-	TaxIncludedPrices map[string]string
-	IOManager         fileManager.FileManager
+	TaxIncludedPrices map[string]string       `json:"tax_included_prices"`
+	IOManager         fileManager.FileManager `json:"-"`
 }
 
 func (job *TaxIncludedPriceJob) Process() {
