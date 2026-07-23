@@ -45,7 +45,7 @@ func (fm FileManager) ReadLines() ([]string, error) {
 }
 
 // writes an object to a specific path
-func (fm FileManager) WriteJSON(data any) error {
+func (fm FileManager) WriteResult(data any) error {
 
 	if fm.OutputFilePath == "" {
 		return errors.New("filePath must be specified")
