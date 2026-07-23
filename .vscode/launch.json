@@ -6,7 +6,7 @@
       "type": "go",
       "request": "launch",
       "mode": "auto",
-      "program": "${workspaceFolder}/9-tax calculator",
+      "program": "${workspaceFolder}/10-goroutines/upgrade-price-calculator",
       "console": "integratedTerminal"
     }
   ]

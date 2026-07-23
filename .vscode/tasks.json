@@ -6,7 +6,7 @@
       "type": "shell",
       "command": "go build -o collections .",
       "options": {
-        "cwd": "${workspaceFolder}/9-tax calculator"
+        "cwd": "${workspaceFolder}/10-goroutines/upgrade-price-calculator"
       },
       "group": {
         "kind": "build",
