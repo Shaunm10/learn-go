@@ -4,9 +4,9 @@
     {
       "label": "Build",
       "type": "shell",
-      "command": "go build -o collections .",
+      "command": "go build -o rest-api .",
       "options": {
-        "cwd": "${workspaceFolder}/10-goroutines/upgrade-price-calculator"
+        "cwd": "${workspaceFolder}/11-rest-api"
       },
       "group": {
         "kind": "build",

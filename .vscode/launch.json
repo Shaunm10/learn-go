@@ -6,7 +6,7 @@
       "type": "go",
       "request": "launch",
       "mode": "auto",
-      "program": "${workspaceFolder}/10-goroutines/upgrade-price-calculator",
+      "program": "${workspaceFolder}/11-rest-api",
       "console": "integratedTerminal"
     }
   ]
