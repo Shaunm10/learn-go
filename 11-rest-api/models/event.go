@@ -1,6 +1,7 @@
 package models
 
 import (
+	"database/sql"
 	"errors"
 	"time"
 
@@ -46,9 +47,6 @@ func (event *Event) Save() error {
 	return nil
 }
 
-// static fields
-var events = []Event{}
-
 func GetAllEvents() ([]Event, error) {
 	query := `
 		SELECT
@@ -86,4 +84,45 @@ func GetAllEvents() ([]Event, error) {
 	}
 
 	return returnEvents, nil
+}
+
+func GetEvent(eventId int64) (*Event, error) {
+	query := `
+		SELECT
+			id
+			, name
+			, description
+			, location
+			, dateTime
+			, user_Id
+		FROM events
+		WHERE id =?
+	`
+	row := database.DatabaseInstance.QueryRow(query, eventId)
+
+	var event Event
+
+	err := row.Scan(
+		&event.ID,
+		&event.Name,
+		&event.Description,
+		&event.Location,
+		&event.DateTime,
+		&event.UserID)
+
+	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			// we couldn't find the 1 row so this is a http 404
+			return nil, nil
+		}
+
+		// an actual DB/SQL error
+		return nil, errors.Join(
+			errors.New("Unable to get event for Id"),
+			err,
+		)
+	}
+
+	// happy path
+	return &event, nil
 }

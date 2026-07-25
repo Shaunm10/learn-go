@@ -1,7 +1,9 @@
 package main
 
 import (
+	"fmt"
 	"net/http"
+	"strconv"
 
 	"example.com/rest-api/database"
 	"example.com/rest-api/models"
@@ -17,15 +19,16 @@ func main() {
 	server := gin.Default()
 
 	// routes
-	server.GET("/events", getEvents)
-	server.POST("/events", createEvent)
+	server.GET("/events", handleGetEventsRequest)
+	server.POST("/events", handleCreateEventRequest)
+	server.GET("/events/:id", handleGetEventRequest)
 
 	// start the server running and listening
 	server.Run(":8080") // http://localhost:8080
 
 }
 
-func getEvents(context *gin.Context) {
+func handleGetEventsRequest(context *gin.Context) {
 	events, err := models.GetAllEvents()
 	if err != nil {
 		context.JSON(http.StatusInternalServerError, gin.H{"message": "Unable to fetch events"})
@@ -34,7 +37,7 @@ func getEvents(context *gin.Context) {
 	context.JSON(http.StatusOK, events)
 }
 
-func createEvent(context *gin.Context) {
+func handleCreateEventRequest(context *gin.Context) {
 	var event models.Event
 	err := context.BindJSON(&event)
 	if err != nil {
@@ -43,7 +46,6 @@ func createEvent(context *gin.Context) {
 	}
 
 	// TODO: make this come from the db etc.
-	event.ID = 1
 	event.UserID = 1
 
 	// save the event to persistence
@@ -57,4 +59,45 @@ func createEvent(context *gin.Context) {
 		"message": "Event created",
 		"event":   event,
 	})
+}
+
+func handleGetEventRequest(context *gin.Context) {
+
+	// verify an Id was passed in
+	eventIdAsString, paramFound := context.Params.Get("id")
+	if !paramFound {
+		context.JSON(http.StatusBadRequest, gin.H{
+			"message": "id is a required field",
+		})
+		return
+	}
+
+	// verify the Id was numeric
+	eventId, err := strconv.ParseInt(eventIdAsString, 10, 64)
+	if err != nil {
+		context.JSON(http.StatusBadRequest, gin.H{"message": fmt.Sprintf(
+			"Unable to convert id {%v} to numeric value.", eventIdAsString),
+		})
+		return
+	}
+
+	// perform the query operation
+	event, err := models.GetEvent(eventId)
+
+	if err != nil {
+		context.JSON(http.StatusInternalServerError, gin.H{
+			"message": "Unable to get fetch event.",
+		})
+		return
+	}
+
+	if event == nil {
+		context.JSON(http.StatusNotFound, gin.H{
+			"message": "Unable to find event from given EventId",
+		})
+		return
+	}
+
+	// happy path
+	context.JSON(http.StatusOK, *event)
 }
