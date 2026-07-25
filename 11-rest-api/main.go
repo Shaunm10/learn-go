@@ -3,11 +3,16 @@ package main
 import (
 	"net/http"
 
+	"example.com/rest-api/database"
 	"example.com/rest-api/models"
 	"github.com/gin-gonic/gin"
 )
 
 func main() {
+
+	// start the db connection
+	database.InitDB()
+
 	// instantiate a gin web server
 	server := gin.Default()
 
@@ -17,11 +22,16 @@ func main() {
 
 	// start the server running and listening
 	server.Run(":8080") // http://localhost:8080
+
 }
 
 func getEvents(context *gin.Context) {
-	allEvents := models.GetAllEvents()
-	context.JSON(http.StatusOK, allEvents)
+	events, err := models.GetAllEvents()
+	if err != nil {
+		context.JSON(http.StatusInternalServerError, gin.H{"message": "Unable to fetch events"})
+		return
+	}
+	context.JSON(http.StatusOK, events)
 }
 
 func createEvent(context *gin.Context) {
@@ -37,7 +47,11 @@ func createEvent(context *gin.Context) {
 	event.UserID = 1
 
 	// save the event to persistence
-	event.Save()
+	err = event.Save()
+	if err != nil {
+		context.JSON(http.StatusInternalServerError, gin.H{"message": "Could not save event."})
+		return
+	}
 
 	context.JSON(http.StatusCreated, gin.H{
 		"message": "Event created",
