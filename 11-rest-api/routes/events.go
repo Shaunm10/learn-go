@@ -57,7 +57,7 @@ func HandleEventGet(context *gin.Context) {
 	eventId, err := strconv.ParseInt(eventIdAsString, 10, 64)
 	if err != nil {
 		context.JSON(http.StatusBadRequest, gin.H{"message": fmt.Sprintf(
-			"Unable to convert id {%v} to numeric value.", eventIdAsString),
+			"Unable to convert id '%v' to numeric value.", eventIdAsString),
 		})
 		return
 	}
@@ -142,5 +142,56 @@ func HandleEventPut(context *gin.Context) {
 
 	// happy path
 	context.JSON(http.StatusOK, newEvent)
+
+}
+
+func HandleEventDelete(context *gin.Context) {
+	// verify an Id was passed in
+	eventIdAsString, paramFound := context.Params.Get("id")
+	if !paramFound {
+		context.JSON(http.StatusBadRequest, gin.H{
+			"message": "id is a required field",
+		})
+		return
+	}
+
+	// verify the Id was numeric
+	eventId, err := strconv.ParseInt(eventIdAsString, 10, 64)
+	if err != nil {
+		context.JSON(http.StatusBadRequest, gin.H{"message": fmt.Sprintf(
+			"Unable to convert id '%v' to numeric value.", eventIdAsString),
+		})
+		return
+	}
+
+	// get the existingEvent that's being updated
+	existingEvent, err := models.GetEvent(eventId)
+
+	if err != nil {
+		context.JSON(http.StatusInternalServerError, gin.H{
+			"message": "Unable to fetch event",
+		})
+		return
+	}
+
+	if existingEvent == nil {
+		context.JSON(http.StatusNotFound, gin.H{
+			"message": "Unable to find event",
+		})
+		return
+	}
+
+	err = models.DeleteEvent(eventId)
+
+	if err != nil {
+		context.JSON(http.StatusInternalServerError, gin.H{
+			"message": "Failed to delete event",
+		})
+	}
+
+	// happy path
+	context.JSON(http.StatusNoContent, gin.H{
+		"message": "event successfully deleted",
+	})
 
 }

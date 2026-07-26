@@ -158,3 +158,23 @@ func UpdateEvent(eventId int64, event Event) (*Event, error) {
 	// happy path
 	return &event, nil
 }
+
+// Delete's an event by Id
+// It's assumed this event exist, and if not an error is not thrown
+func DeleteEvent(eventId int64) error {
+
+	query := `
+		DELETE 
+		FROM events
+		WHERE id =?
+	`
+
+	_, err := database.DatabaseInstance.Exec(query, eventId)
+
+	if err != nil {
+		return errors.Join(errors.New("Unable to DELETE event"), err)
+	}
+
+	// happy path
+	return nil
+}
