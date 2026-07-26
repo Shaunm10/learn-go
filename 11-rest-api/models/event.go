@@ -126,3 +126,35 @@ func GetEvent(eventId int64) (*Event, error) {
 	// happy path
 	return &event, nil
 }
+
+func UpdateEvent(eventId int64, event Event) (*Event, error) {
+
+	// just in case...
+	event.ID = eventId
+
+	query := `
+		UPDATE events
+		SET name = ?
+			, description = ?
+			, location = ?
+			, dateTime = ?
+			, user_Id = ? 
+		WHERE Id =?
+	`
+	stmt, err := database.DatabaseInstance.Prepare(query)
+
+	if err != nil {
+		return nil, errors.Join(errors.New("Unable to prepare events UPDATE statement"), err)
+	}
+
+	defer stmt.Close()
+
+	_, err = stmt.Exec(event.Name, event.Description, event.Location, event.DateTime, event.UserID, event.ID)
+
+	if err != nil {
+		return nil, errors.Join(errors.New("Failed to UPDATE event"), err)
+	}
+
+	// happy path
+	return &event, nil
+}

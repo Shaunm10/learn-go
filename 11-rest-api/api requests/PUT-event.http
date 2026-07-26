@@ -1,0 +1,9 @@
+PUT http://localhost:8080/events/1
+content-Type: application/json
+
+{
+    "name":"time to go to bed??",
+    "description":"desc updated",
+    "location":"location updated",
+    "dateTime":"2026-07-24T09:05:12.000Z"
+}
