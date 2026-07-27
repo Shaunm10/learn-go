@@ -47,7 +47,7 @@ func HandleLoginPOST(context *gin.Context) {
 	}
 
 	// now we need to retrieve the user based on JUST email
-	hashedPassword, err := models.GetHashedEmailByEmail(user.Email)
+	userFromDB, err := models.GetUserByEmail(user.Email)
 
 	if err != nil {
 		context.JSON(http.StatusUnauthorized, gin.H{
@@ -56,7 +56,7 @@ func HandleLoginPOST(context *gin.Context) {
 		return
 	}
 
-	isPasswordCorrect := utils.DoesHashMatchTerm(user.Password, hashedPassword)
+	isPasswordCorrect := utils.DoesHashMatchTerm(user.Password, userFromDB.Password)
 
 	if !isPasswordCorrect {
 		context.JSON(http.StatusUnauthorized, gin.H{
@@ -65,8 +65,17 @@ func HandleLoginPOST(context *gin.Context) {
 		return
 	}
 
+	token, err := utils.GenerateToken(userFromDB.Email, userFromDB.ID)
+
+	if err != nil {
+		context.JSON(http.StatusInternalServerError, gin.H{
+			"message": "Invalid Password or Email",
+		})
+		return
+	}
 	// happy path
 	context.JSON(http.StatusOK, gin.H{
 		"message": "login successful",
+		"token":   token,
 	})
 }

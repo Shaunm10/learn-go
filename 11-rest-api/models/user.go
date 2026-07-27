@@ -51,23 +51,26 @@ func (user *User) Save() error {
 	return nil
 }
 
-func GetHashedEmailByEmail(email string) (string, error) {
+func GetUserByEmail(email string) (*User, error) {
 	query := `
-		SELECT 
-			 Password
+		SELECT
+			Id
+			, email
+			, password
+			, createDate
 		FROM users
 		WHERE Email = ?
 	`
 
 	//var user User
-	var retrievedPassword string
+	var user User
 	row := database.DatabaseInstance.QueryRow(query, email)
 
-	err := row.Scan(&retrievedPassword)
+	err := row.Scan(&user.ID, &user.Email, &user.Password, &user.CreatedDate)
 
 	if err != nil {
-		return retrievedPassword, err
+		return nil, err
 	}
 
-	return retrievedPassword, err
+	return &user, nil
 }
