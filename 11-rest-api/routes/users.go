@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"example.com/rest-api/models"
+	"example.com/rest-api/utils"
 	"github.com/gin-gonic/gin"
 )
 
@@ -31,5 +32,41 @@ func HandleSignupPOST(context *gin.Context) {
 	// happy path
 	context.JSON(http.StatusCreated, gin.H{
 		"message": "Signup complete",
+	})
+}
+
+func HandleLoginPOST(context *gin.Context) {
+	var user models.User
+	err := context.ShouldBindJSON(&user)
+
+	if err != nil {
+		context.JSON(http.StatusBadRequest, gin.H{
+			"message": "Unable to parse request data",
+		})
+		return
+	}
+
+	// now we need to retrieve the user based on JUST email
+	hashedPassword, err := models.GetHashedEmailByEmail(user.Email)
+
+	if err != nil {
+		context.JSON(http.StatusUnauthorized, gin.H{
+			"message": "Invalid Password or Email",
+		})
+		return
+	}
+
+	isPasswordCorrect := utils.DoesHashMatchTerm(user.Password, hashedPassword)
+
+	if !isPasswordCorrect {
+		context.JSON(http.StatusUnauthorized, gin.H{
+			"message": "Invalid Password or Email",
+		})
+		return
+	}
+
+	// happy path
+	context.JSON(http.StatusOK, gin.H{
+		"message": "login successful",
 	})
 }
