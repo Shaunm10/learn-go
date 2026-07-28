@@ -74,7 +74,7 @@ func createEventsTable() {
 func createRegistrationTable() {
 
 	createRegistrationTableScript := `
-	CREATE TABLE IF NOT registrations(
+	CREATE TABLE IF NOT EXISTS registrations(
 		id INTEGER PRIMARY KEY AUTOINCREMENT,
 		user_id INTEGER NOT NULL,
 		event_id INTEGER NOT NULL,

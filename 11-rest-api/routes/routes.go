@@ -14,11 +14,13 @@ func RegisterRoutes(server *gin.Engine) {
 	// these should be protected by authentication
 	authenticatedRouterGroup := server.Group("/")
 
-	// adds this middlewear to all the routes mentioned below
+	// adds this middleware to all the routes mentioned below
 	authenticatedRouterGroup.Use(middleware.Authenticate)
 	authenticatedRouterGroup.POST("/events", HandleEventCreate)
 	authenticatedRouterGroup.PUT("/events/:id", HandleEventPut)
 	authenticatedRouterGroup.DELETE("/events/:id", HandleEventDelete)
+	authenticatedRouterGroup.POST("/events/:id/register", HandleRegisterCreate)
+	authenticatedRouterGroup.DELETE("/events/:id/register", HandleRegisterDelete)
 
 	// user routes
 	server.POST("/signup", HandleSignupPOST)
