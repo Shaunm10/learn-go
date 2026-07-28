@@ -1,8 +1,9 @@
 PUT http://localhost:8080/events/1
 content-Type: application/json
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InRlc3QyQGV4YW1wbGUuY29tIiwiZXhwIjoxNzg1MjUyNjMyLCJ1c2VySWQiOjJ9.9MSFARjZTvI28YV_84-1UO1dPt5Zg9pDtB7hHP_cjA0
 
 {
-    "name":"time to go to bed??",
+    "name":"time to get some more coffee?",
     "description":"desc updated",
     "location":"location updated",
     "dateTime":"2026-07-24T09:05:12.000Z"

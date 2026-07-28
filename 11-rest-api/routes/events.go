@@ -6,7 +6,6 @@ import (
 	"strconv"
 
 	"example.com/rest-api/models"
-	"example.com/rest-api/utils"
 	"github.com/gin-gonic/gin"
 )
 
@@ -21,23 +20,10 @@ func HandleEventsGet(context *gin.Context) {
 
 func HandleEventCreate(context *gin.Context) {
 
-	token := context.Request.Header.Get("Authorization")
-
-	if token == "" {
-		context.JSON(http.StatusUnauthorized, gin.H{
-			"message": "Not authorized"})
-		return
-	}
-
-	claimsUserId, err := utils.VerifyToken(token)
-	if err != nil {
-		context.JSON(http.StatusUnauthorized, gin.H{
-			"message": "Not authorized"})
-		return
-	}
+	claimsUserId := context.GetInt64("userId")
 
 	var event models.Event
-	err = context.BindJSON(&event)
+	err := context.BindJSON(&event)
 	if err != nil {
 		context.JSON(http.StatusBadRequest, gin.H{"message": "Cannot parse event from request body"})
 		return
@@ -129,9 +115,20 @@ func HandleEventPut(context *gin.Context) {
 		return
 	}
 
+	// verify this event exists
 	if existingEvent == nil {
 		context.JSON(http.StatusNotFound, gin.H{
 			"message": "Unable to find event",
+		})
+		return
+	}
+
+	authenticatedUserId := context.GetInt64("userId")
+
+	// verify this user owns this event
+	if authenticatedUserId != int64(existingEvent.UserID) {
+		context.JSON(http.StatusUnauthorized, gin.H{
+			"message": "Unauthorized",
 		})
 		return
 	}
@@ -194,6 +191,16 @@ func HandleEventDelete(context *gin.Context) {
 	if existingEvent == nil {
 		context.JSON(http.StatusNotFound, gin.H{
 			"message": "Unable to find event",
+		})
+		return
+	}
+
+	authenticatedUserId := context.GetInt64("userId")
+
+	// verify this user owns this event
+	if authenticatedUserId != int64(existingEvent.UserID) {
+		context.JSON(http.StatusUnauthorized, gin.H{
+			"message": "Unauthorized",
 		})
 		return
 	}

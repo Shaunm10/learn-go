@@ -1,6 +1,7 @@
 package routes
 
 import (
+	"example.com/rest-api/middleware"
 	"github.com/gin-gonic/gin"
 )
 
@@ -11,9 +12,13 @@ func RegisterRoutes(server *gin.Engine) {
 	server.GET("/events/:id", HandleEventGet)
 
 	// these should be protected by authentication
-	server.POST("/events", HandleEventCreate)
-	server.PUT("/events/:id", HandleEventPut)
-	server.DELETE("/events/:id", HandleEventDelete)
+	authenticatedRouterGroup := server.Group("/")
+
+	// adds this middlewear to all the routes mentioned below
+	authenticatedRouterGroup.Use(middleware.Authenticate)
+	authenticatedRouterGroup.POST("/events", HandleEventCreate)
+	authenticatedRouterGroup.PUT("/events/:id", HandleEventPut)
+	authenticatedRouterGroup.DELETE("/events/:id", HandleEventDelete)
 
 	// user routes
 	server.POST("/signup", HandleSignupPOST)

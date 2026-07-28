@@ -138,7 +138,6 @@ func UpdateEvent(eventId int64, event Event) (*Event, error) {
 			, description = ?
 			, location = ?
 			, dateTime = ?
-			, user_Id = ? 
 		WHERE Id =?
 	`
 	stmt, err := database.DatabaseInstance.Prepare(query)
@@ -149,7 +148,7 @@ func UpdateEvent(eventId int64, event Event) (*Event, error) {
 
 	defer stmt.Close()
 
-	_, err = stmt.Exec(event.Name, event.Description, event.Location, event.DateTime, event.UserID, event.ID)
+	_, err = stmt.Exec(event.Name, event.Description, event.Location, event.DateTime, event.ID)
 
 	if err != nil {
 		return nil, errors.Join(errors.New("Failed to UPDATE event"), err)
