@@ -6,6 +6,7 @@ import (
 	"strconv"
 
 	"example.com/rest-api/models"
+	"example.com/rest-api/utils"
 	"github.com/gin-gonic/gin"
 )
 
@@ -19,15 +20,31 @@ func HandleEventsGet(context *gin.Context) {
 }
 
 func HandleEventCreate(context *gin.Context) {
+
+	token := context.Request.Header.Get("Authorization")
+
+	if token == "" {
+		context.JSON(http.StatusUnauthorized, gin.H{
+			"message": "Not authorized"})
+		return
+	}
+
+	claimsUserId, err := utils.VerifyToken(token)
+	if err != nil {
+		context.JSON(http.StatusUnauthorized, gin.H{
+			"message": "Not authorized"})
+		return
+	}
+
 	var event models.Event
-	err := context.BindJSON(&event)
+	err = context.BindJSON(&event)
 	if err != nil {
 		context.JSON(http.StatusBadRequest, gin.H{"message": "Cannot parse event from request body"})
 		return
 	}
 
 	// TODO: make this come from the db etc.
-	event.UserID = 1
+	event.UserID = int(claimsUserId)
 
 	// save the event to persistence
 	err = event.Save()

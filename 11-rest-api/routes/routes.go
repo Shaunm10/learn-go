@@ -8,8 +8,10 @@ func RegisterRoutes(server *gin.Engine) {
 
 	// event routes
 	server.GET("/events", HandleEventsGet)
-	server.POST("/events", HandleEventCreate)
 	server.GET("/events/:id", HandleEventGet)
+
+	// these should be protected by authentication
+	server.POST("/events", HandleEventCreate)
 	server.PUT("/events/:id", HandleEventPut)
 	server.DELETE("/events/:id", HandleEventDelete)
 
